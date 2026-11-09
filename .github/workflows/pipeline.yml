@@ -1,0 +1,59 @@
+name: Build, Scan and Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  scan-dependencies-and-image:
+    name: Trivy - Container and Dependency Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build image
+        run: docker build -t demo-app:latest .
+
+      - name: Trivy - escaneo de imagen
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: demo-app:latest
+          format: table
+          output: trivy-report.txt
+          exit-code: 0
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report
+          path: trivy-report.txt
+
+  dast-scan:
+    name: Wapiti - Dynamic Application Security Testing (DAST)
+    runs-on: ubuntu-latest
+    needs: scan-dependencies-and-image
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Levantar app
+        run: |
+          docker build -t demo-app .
+          docker run -d -p 8000:8000 demo-app
+          sleep 8
+
+      - name: Wapiti - escaneo dinámico
+        run: |
+          pip install wapiti3
+          wapiti -u http://localhost:8000/ -f html -o wapiti-report --scope folder
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wapiti-report
+          path: wapiti-report
+
+  deploy:
+    name: Deploy to Cloud (Render)
+    runs-on: ubuntu-latest
+    needs: dast-scan
+    steps:
+      - name: Disparar despliegue en Render
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"

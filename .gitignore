@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+reports/
+wapiti-report/
+trivy-report.txt
+.venv/
+env/
