@@ -173,7 +173,12 @@ jobs:
     needs: dast-scan
     steps:
       - name: Disparar despliegue en Render
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+        run: |
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "Aviso: RENDER_DEPLOY_HOOK no configurado. Saltando despliegue."
+            exit 0
+          fi
+          curl -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
 ```
 
 > *(Inserta aquí una captura de GitHub Actions mostrando los 3 jobs en verde)*

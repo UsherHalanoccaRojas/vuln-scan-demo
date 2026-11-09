@@ -56,5 +56,15 @@ jobs:
     needs: dast-scan
     steps:
       - name: Disparar despliegue en Render
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+        run: |
+          if [ -z "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "::warning::El secreto RENDER_DEPLOY_HOOK no está configurado en GitHub Secrets."
+            echo "Para habilitar el despliegue automático:"
+            echo "1. Ve a Render.com -> Web Service -> Settings -> Deploy Hook."
+            echo "2. Copia la URL."
+            echo "3. En GitHub: Settings -> Secrets and variables -> Actions -> New repository secret (nombre: RENDER_DEPLOY_HOOK)."
+            exit 0
+          fi
+          echo "Disparando despliegue hacia Render..."
+          curl -f -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
 
