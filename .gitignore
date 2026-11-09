@@ -5,3 +5,4 @@ wapiti-report/
 trivy-report.txt
 .venv/
 env/
+

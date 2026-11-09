@@ -287,3 +287,4 @@ El escaneo automatizado continuo permite:
 - **Lista oficial de herramientas OWASP:** [OWASP Vulnerability Scanning Tools](https://community.owasp.org/Vulnerability_Scanning_Tools)
 
 *Etiquetas sugeridas para Medium:* `#cybersecurity` `#devsecops` `#owasp` `#github-actions` `#docker` `#python` `#render`
+
