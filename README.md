@@ -50,5 +50,5 @@ El flujo automatizado se ejecuta en cada `push` a la rama `main` y consta de tre
 - **Repositorio de GitHub:** `https://github.com/TU_USUARIO/vuln-scan-demo`
 
 ## Integrantes
-- Nombre y Apellido
-
+- Usher Damiron Halanocca Rojas
+- Stevie Marca Aguilar
